@@ -9,8 +9,8 @@
 // @match        https://www.twitch.tv/*
 // @license      GPL-2.0-or-later; http://www.gnu.org/licenses/gpl-2.0.txt
 // @icon         https://www.alienwarearena.com/favicon.ico
-// @require      file:///C:\Users\User\Documents\GitHub\alienware_arena_helper_reloaded\awahelper.js
-// @require      file:///C:\Users\User\Documents\GitHub\alienware_arena_helper_reloaded\twitch.js
+// @require      file:///C:\Users\User\Documents\GitHub\alienware-arena-helper-reloaded\awahelper.js
+// @require      file:///C:\Users\User\Documents\GitHub\alienware-arena-helper-reloaded\twitch.js
 // @grant        none
 // @noframes
 // ==/UserScript==
