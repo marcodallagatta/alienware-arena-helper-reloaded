@@ -172,7 +172,7 @@ class UI {
 			}
 		}, false);
 
-		this.newStatusMessage(`Alienware Arena Helper Realoded v<b>${version}</b></span>`);
+		// this.newStatusMessage(`Alienware Arena Helper Realoded v<b>${version}</b></span>`);
 	}
 
 	initNavPanel() {
@@ -641,6 +641,7 @@ async function showDailyQuestButton() {
 				break;
 			case 'rank':
 			case 'who\'s #1?':
+			case 'climb the ranks':
 				$(`<a class="btn btn-default awah-btn-quest" href="https://www.alienwarearena.com/rewards/leaderboard" data-awah-tooltip="Check the leaderboard">
 					<span class="more-link right"></span></a>`).appendTo(".quest-item > .col-2");
 				ui.newStatusMessage(`<a href="https://www.alienwarearena.com/rewards/leaderboard">Daily Quest: check the Leaderboard</a>`, true);

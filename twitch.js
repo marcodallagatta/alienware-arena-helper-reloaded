@@ -12,7 +12,9 @@ function twitchHelp() {
 			'Elly_VT',
 			'REDinFamy',
 			'Dikymo',
-			'rxysurfchic'
+			'rxysurfchic',
+			'TheGeekEntry',
+			'GeekBomb'
 	];
 
 	alienStreamers.some(name => {
