@@ -216,7 +216,7 @@ class UI {
 
 			<div class="awah-option">
 			<label><span class="awah-opt-title">Automate Twitch Watching</span><input id="awah-twitchWatchAutomate" class="form-control awah-opt-input" type="checkbox" ${options.twitchWatchAutomate ? 'checked' : ''}><div class="form-control awah-opt-input"><div>&nbsp;</div>&nbsp;</div></label>
-			<span class="awah-opt-desc awah-grey">A popup will appear to open the AWA Twitch page, that page will automatically refresh if no streamers are live and open a stream if they are. Default: ${options.default().twitchWatchAutomate ? 'ON' : 'OFF'}</span>
+			<span class="awah-opt-desc awah-grey">A popup will appear to open the AWA Twitch page, that page will automatically refresh if no streamers are live and open a stream if they are. On Twitch itself, the usersript will remove the player to reduce resources in background. Default: ${options.default().twitchWatchAutomate ? 'ON' : 'OFF'}</span>
 			</div>
 
 			<div class="awah-option">
