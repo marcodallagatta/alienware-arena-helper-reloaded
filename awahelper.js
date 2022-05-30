@@ -121,8 +121,7 @@ class Options {
 			statusMessageDelay: 10000,
 			actionsDelayMin: 500,
 			actionsDelayMax: 2000,
-			automate: false,
-			twitchPlayerRemove: true,
+			twitchPlayerRemove: false,
 			showKeyOnMarkedGiveaways: true,
 			version,
 		};
@@ -142,7 +141,6 @@ class Options {
 		this.actionsDelayMin = parseInt($('#awah-actions-delay-min').val(), 10);
 		this.actionsDelayMax = parseInt($('#awah-actions-delay-max').val(), 10);
 		this.showKeyOnMarkedGiveaways = $('#awah-show-key-on-marked-giveaways').prop('checked');
-		this.automate = $('#awah-automate').prop('checked');
 		this.twitchPlayerRemove = $('#awah-twitchPlayerRemove').prop('checked');
 		this.statusMessageDelay = parseInt($('#awah-status-message-delay').val(), 10);
 
@@ -212,18 +210,13 @@ class UI {
 			</div>
 
 			<div class="awah-option">
-			<label><span class="awah-opt-title">Automate Daily Quests</span><input id="awah-automate" class="form-control awah-opt-input" type="checkbox" ${options.automate ? 'checked' : ''}><div class="form-control awah-opt-input"><div>&nbsp;</div>&nbsp;</div></label>
-			<span class="awah-opt-desc awah-grey">Makes the helper automate the Daily Quests. Default: ${options.default().automate ? 'ON' : 'OFF'}</span>
-			</div>
-
-			<div class="awah-option">
 			<label><span class="awah-opt-title">Remove Twitch Player from Homepage</span><input id="awah-twitchPlayerRemove" class="form-control awah-opt-input" type="checkbox" ${options.twitchPlayerRemove ? 'checked' : ''}><div class="form-control awah-opt-input"><div>&nbsp;</div>&nbsp;</div></label>
 			<span class="awah-opt-desc awah-grey">Removes the player to save resources. Default: ${options.default().twitchPlayerRemove ? 'ON' : 'OFF'}</span>
 			</div>
 
 			<div class="awah-option">
 			<label><span class="awah-opt-title">statusMessageDelay</span><input id="awah-status-message-delay" class="form-control awah-opt-input" type="text" value="${options.statusMessageDelay}"></label>
-			<span class="awah-opt-desc awah-grey">How long the status messages will be displayed before they disappear. (milliseconds)<br>Default: ${options.default().statusMessageDelay}</span>
+			<span class="awah-opt-desc awah-grey">How long the status messages will be displayed before they disappear. This doesn't affect persistent notifications such as uncompleted quests. (milliseconds)<br>Default: ${options.default().statusMessageDelay}</span>
 			</div>
 
 			<div class="awah-option">
@@ -251,14 +244,9 @@ class UI {
 
 		$('#awah_restore_default').on('click', function() {
 			if (!confirm("Are you damn sure about this?!")) return;
-			$('#awah-actions-delay-min').val(options.default().actionsDelayMin);
-			$('#awah-actions-delay-max').val(options.default().actionsDelayMax);
-			$('#awah-show-key-on-marked-giveaways').prop('checked', (options.default().showKeyOnMarkedGiveaways === true));
-			$('#awah-automate').prop('', (options.default().automate === false));
-			$('#awah-twitchPlayerRemove').prop('', (options.default().automate === true));
-			$('#awah-status-message-delay').val(options.default().statusMessageDelay);
-			ui.newStatusMessage('Default options settings restored!');
-			options.save();
+			localStorage.removeItem('AlienwareArenaHelperOptions');
+			ui.newStatusMessage('Default options settings restored! Realoding...');
+			setTimeout(function() { window.location.reload(); }, 2500)
 		});
 
 		document.querySelector('.awah-options-btn').addEventListener('click', this.toggleOptionsDisplay, false);
