@@ -3,7 +3,7 @@
 // @namespace    https://github.com/marcodallagatta
 // @version      2.0.0
 // @description  Earn daily ARP easily
-// @author       Thomas Ashcraft, Marco Dalla Gatta
+// @author       Marco Dalla Gatta
 // @match        *://*.alienwarearena.com/*
 // @match        *://*.alienwarearena.com//*
 // @match        https://www.twitch.tv/*
@@ -34,4 +34,9 @@
 // not possible to remove avatar and badges as they are loaded dynamically on pagination changes, best to just use adblock
 
 if (window.location.hostname.split('.').slice(1).join('.') === 'alienwarearena.com') { awaHelper(window); }
-if (window.location.hostname === 'www.twitch.tv') { twitchHelp(); }
+if (window.location.hostname === 'www.twitch.tv') {
+	twitchHelp();
+	setTimeout(function() {
+		window.location.href = 'https://www.alienwarearena.com/twitch/live';
+	}, 1000*60*45); // after 45 minutes, points will be redeemed, so redirect to arena
+}
