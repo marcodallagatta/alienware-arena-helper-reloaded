@@ -44,21 +44,3 @@ function twitchHelp() {
 			 }
 	 })
 };
-
-function awaTwitchPageRedir() {
-    // removes links with broken streamers
-    // $(".media:contains('runJDrun')").remove();
-    // $(".media:contains('GeekBomb')").remove();
-
-    const targetLink = document.querySelectorAll('a.btn-primary');
-
-    if (targetLink.length) {
-        setTimeout(function () {
-            window.location.href = targetLink[targetLink.length - 1].href;
-        }, 3000);
-    } else {
-        setTimeout(function () {
-            location.reload(true);
-        }, 300000); // 5 minutes in milliseconds
-    }
-};

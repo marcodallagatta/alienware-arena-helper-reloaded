@@ -33,11 +33,5 @@
 // NOTES
 // not possible to remove avatar and badges as they are loaded dynamically on pagination changes, best to just use adblock
 
-if (window.location.hostname.split('.').slice(1).join('.') === 'alienwarearena.com') {
-	awaHelper(window);
-	const twitchPoints = document.querySelector('div > div > section:nth-child(8) > div > div:nth-child(2) > center > b');
-	if ((window.location.pathname === '/twitch/live') && (twitchPoints.innerText < 15)) {
-		awaTwitchPageRedir();
-	}
-}
+if (window.location.hostname.split('.').slice(1).join('.') === 'alienwarearena.com') { awaHelper(window); }
 if (window.location.hostname === 'www.twitch.tv') { twitchHelp(); }

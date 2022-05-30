@@ -122,6 +122,7 @@ class Options {
 			actionsDelayMin: 500,
 			actionsDelayMax: 2000,
 			twitchPlayerRemove: false,
+			twitchWatchAutomate: true,
 			showKeyOnMarkedGiveaways: true,
 			version,
 		};
@@ -142,6 +143,7 @@ class Options {
 		this.actionsDelayMax = parseInt($('#awah-actions-delay-max').val(), 10);
 		this.showKeyOnMarkedGiveaways = $('#awah-show-key-on-marked-giveaways').prop('checked');
 		this.twitchPlayerRemove = $('#awah-twitchPlayerRemove').prop('checked');
+		this.twitchWatchAutomate = $('#awah-twitchWatchAutomate').prop('checked');
 		this.statusMessageDelay = parseInt($('#awah-status-message-delay').val(), 10);
 
 		try {
@@ -169,8 +171,6 @@ class UI {
 				event.target.remove();
 			}
 		}, false);
-
-		// this.newStatusMessage(`Alienware Arena Helper Realoded v<b>${version}</b></span>`);
 	}
 
 	initNavPanel() {
@@ -212,6 +212,11 @@ class UI {
 			<div class="awah-option">
 			<label><span class="awah-opt-title">Remove Twitch Player from Homepage</span><input id="awah-twitchPlayerRemove" class="form-control awah-opt-input" type="checkbox" ${options.twitchPlayerRemove ? 'checked' : ''}><div class="form-control awah-opt-input"><div>&nbsp;</div>&nbsp;</div></label>
 			<span class="awah-opt-desc awah-grey">Removes the player to save resources. Default: ${options.default().twitchPlayerRemove ? 'ON' : 'OFF'}</span>
+			</div>
+
+			<div class="awah-option">
+			<label><span class="awah-opt-title">Automate Twitch Watching</span><input id="awah-twitchWatchAutomate" class="form-control awah-opt-input" type="checkbox" ${options.twitchWatchAutomate ? 'checked' : ''}><div class="form-control awah-opt-input"><div>&nbsp;</div>&nbsp;</div></label>
+			<span class="awah-opt-desc awah-grey">A popup will appear to open the AWA Twitch page, that page will automatically refresh if no streamers are live and open a stream if they are. Default: ${options.default().twitchWatchAutomate ? 'ON' : 'OFF'}</span>
 			</div>
 
 			<div class="awah-option">
@@ -766,6 +771,38 @@ function getTakenGiveaways() {
 if (options.twitchPlayerRemove) {
 	if (window.location.pathname === '/') {
 		document.querySelector('.embed-responsive-item').remove();
+	}
+}
+
+// twitch watching automatation
+function awaTwitchPageRedir() {
+	// removes links with broken streamers
+	// $(".media:contains('runJDrun')").remove();
+	// $(".media:contains('GeekBomb')").remove();
+
+	const targetLink = document.querySelectorAll('a.btn-primary');
+
+	if (targetLink.length) {
+			setTimeout(function () {
+					window.location.href = targetLink[targetLink.length - 1].href;
+			}, 3000);
+	} else {
+			ui.newStatusMessage(`The page will refresh in 5 minutes to check for online streamers`);
+			setTimeout(function () {
+					location.reload(true);
+			}, 300000); // 5 minutes in milliseconds
+	}
+};
+
+if (options.twitchWatchAutomate) {
+	const twitchPoints = document.querySelector('div > div > section:nth-child(8) > div > div:nth-child(2) > center > b');
+	// if on another page of awa that is not the twitch one, notify to open it, if points are less than maximum
+	if ((window.location.pathname != '/twitch/live') && (twitchPoints.innerText < 15)) {
+		ui.newStatusMessage(`<a href="https://www.alienwarearena.com/twitch/live">Open AWA Twitch page and automate watching</a>`, true);
+	}
+	// on the awa twitch page, execute actions
+	if ((window.location.pathname === '/twitch/live') && (twitchPoints.innerText < 15)) {
+		awaTwitchPageRedir();
 	}
 }
 
