@@ -40,7 +40,3 @@ if (window.location.hostname === 'www.twitch.tv') {
 		window.location.href = 'https://www.alienwarearena.com/twitch/live';
 	}, 1000*60*45); // after 45 minutes, points will be redeemed, so redirect to arena
 }
-
-setInterval(function() {
-	timeOnSiteCheck();
-}, 60000);

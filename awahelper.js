@@ -211,8 +211,8 @@ class UI {
 			</div>
 
 			<div class="awah-option">
-			<label><span class="awah-opt-title">Time On Site Cleared Notification</span><input id="awah-timeOnSiteCheck" class="form-control awah-opt-input" type="checkbox" ${options.timeOnSiteCheck ? 'checked' : ''}><div class="form-control awah-opt-input"><div>&nbsp;</div>&nbsp;</div></label>
-			<span class="awah-opt-desc awah-grey">A popup will appear when you've spent enough time on AWA to get the daily points. Default: ${options.default().timeOnSiteCheck ? 'ON' : 'OFF'}</span>
+			<label><span class="awah-opt-title">Time On Site Notification</span><input id="awah-timeOnSiteCheck" class="form-control awah-opt-input" type="checkbox" ${options.timeOnSiteCheck ? 'checked' : ''}><div class="form-control awah-opt-input"><div>&nbsp;</div>&nbsp;</div></label>
+			<span class="awah-opt-desc awah-grey">A popup will appear when you haven't spent enough time on AWA to get the daily points. Default: ${options.default().timeOnSiteCheck ? 'ON' : 'OFF'}</span>
 			</div>
 
 			<div class="awah-option">
@@ -702,8 +702,8 @@ if (options.twitchWatchAutomate) {
 
 if (options.timeOnSiteCheck) {
 	const timeOnSitePoints = document.querySelector('div > div > section:nth-child(7) > div > div:nth-child(2) > center > b');
-	if (timeOnSitePoints >= 5) {
-		ui.newStatusMessage(`"Time On Site" ARP reached, you can close the page`, true);
+	if (timeOnSitePoints.innerText < 50) {
+		ui.newStatusMessage(`You still havent't spent enough time to clear the daily rewards, please keep AWA open`);
 	}
 }
 
