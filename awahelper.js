@@ -72,10 +72,6 @@ document.head.appendChild(document.createElement('style')).textContent = `
 	.awah-opt-input[type="checkbox"] + div > div::before {content: 'ON'; position: absolute; right: 120%;}
 	.awah-opt-input[type="checkbox"] + div > div::after {content: 'OFF'; color: #767676; position: absolute; left: 120%;}
 
-	/* Giveaways page */
-	.awah-giveaway-taken::before {content: attr(awahlabel); display: block; position: absolute; padding: 4rem 2rem; font-family: inherit; font-weight: 700; white-space: pre; overflow: hidden; width: 100%; height: 100%; text-shadow: 2px 2px 2px rgb(0, 0, 0), -1px -1px 2px rgb(0, 0, 0), 2px 2px 5px rgb(0, 0, 0), -1px -1px 5px rgb(0, 0, 0), 0px 0px 10px rgb(0, 0, 0); background-color: rgba(0, 0, 0, 0); background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAIAAAACAQMAAABIeJ9nAAAABGdBTUEAALGPC/xhBQAAACBjSFJNAAB6JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAAABlBMVEUAAAAAAAClZ7nPAAAAAXRSTlMAQObYZgAAAAFiS0dEAIgFHUgAAAAJcEhZcwAACxIAAAsSAdLdfvwAAAAMSURBVAjXY2hgYAAAAYQAgSjdetcAAAAASUVORK5CYII=');}
-	.awah-giveaway-taken:not(:hover) > * {opacity: 0.1; transition: opacity 0.25s ease-in-out;}
-
 	/* comments */
 	.insignia-label::before {content: attr(data-arp-level); font-size: 10px; width: 35px; /* 30 for master */ line-height: 30px; /* 26 for master */ position: absolute; text-align: center; pointer-events: none;}
 
@@ -123,7 +119,7 @@ class Options {
 			actionsDelayMax: 2000,
 			twitchPlayerRemove: false,
 			twitchWatchAutomate: true,
-			showKeyOnMarkedGiveaways: true,
+			timeOnSiteCheck: true,
 			version,
 		};
 	}
@@ -141,9 +137,9 @@ class Options {
 	save() {
 		this.actionsDelayMin = parseInt($('#awah-actions-delay-min').val(), 10);
 		this.actionsDelayMax = parseInt($('#awah-actions-delay-max').val(), 10);
-		this.showKeyOnMarkedGiveaways = $('#awah-show-key-on-marked-giveaways').prop('checked');
 		this.twitchPlayerRemove = $('#awah-twitchPlayerRemove').prop('checked');
 		this.twitchWatchAutomate = $('#awah-twitchWatchAutomate').prop('checked');
+		this.timeOnSiteCheck = $('#awah-timeOnSiteCheck').prop('checked');
 		this.statusMessageDelay = parseInt($('#awah-status-message-delay').val(), 10);
 
 		try {
@@ -205,11 +201,6 @@ class UI {
 			</div>
 
 			<div class="awah-option">
-			<label><span class="awah-opt-title">showKeyOnMarkedGiveaways</span><input id="awah-show-key-on-marked-giveaways" class="form-control awah-opt-input" type="checkbox" ${options.showKeyOnMarkedGiveaways ? 'checked' : ''}><div class="form-control awah-opt-input"><div>&nbsp;</div>&nbsp;</div></label>
-			<span class="awah-opt-desc awah-grey">At Giveaways page. Default: ${options.default().showKeyOnMarkedGiveaways ? 'ON' : 'OFF'}</span>
-			</div>
-
-			<div class="awah-option">
 			<label><span class="awah-opt-title">Remove Twitch Player from Homepage</span><input id="awah-twitchPlayerRemove" class="form-control awah-opt-input" type="checkbox" ${options.twitchPlayerRemove ? 'checked' : ''}><div class="form-control awah-opt-input"><div>&nbsp;</div>&nbsp;</div></label>
 			<span class="awah-opt-desc awah-grey">Removes the player to save resources. Default: ${options.default().twitchPlayerRemove ? 'ON' : 'OFF'}</span>
 			</div>
@@ -217,6 +208,11 @@ class UI {
 			<div class="awah-option">
 			<label><span class="awah-opt-title">Automate Twitch Watching</span><input id="awah-twitchWatchAutomate" class="form-control awah-opt-input" type="checkbox" ${options.twitchWatchAutomate ? 'checked' : ''}><div class="form-control awah-opt-input"><div>&nbsp;</div>&nbsp;</div></label>
 			<span class="awah-opt-desc awah-grey">A popup will appear to open the AWA Twitch page, that page will automatically refresh if no streamers are live and open a stream if they are. On Twitch itself, the usersript will remove the player to reduce resources in background. Default: ${options.default().twitchWatchAutomate ? 'ON' : 'OFF'}</span>
+			</div>
+
+			<div class="awah-option">
+			<label><span class="awah-opt-title">Time On Site Cleared Notification</span><input id="awah-timeOnSiteCheck" class="form-control awah-opt-input" type="checkbox" ${options.timeOnSiteCheck ? 'checked' : ''}><div class="form-control awah-opt-input"><div>&nbsp;</div>&nbsp;</div></label>
+			<span class="awah-opt-desc awah-grey">A popup will appear when you've spent enough time on AWA to get the daily points. Default: ${options.default().timeOnSiteCheck ? 'ON' : 'OFF'}</span>
 			</div>
 
 			<div class="awah-option">
@@ -642,6 +638,7 @@ async function showDailyQuestButton() {
 			case 'frame it':
 			case 'picture day!':
 			case 'fresh siding!':
+			case 'give your alien a new home.':
 				$(`<a class="btn btn-default awah-btn-quest" href="https://www.alienwarearena.com/account/personalization#borders" data-awah-tooltip="Change border">
 					<span class="more-link right"></span></a>`).appendTo(".quest-item > .col-2");
 				ui.newStatusMessage(`<a href="https://www.alienwarearena.com/account/personalization#borders">Daily Quest: change your avatar's border</a>`, true);
@@ -662,109 +659,6 @@ async function showDailyQuestButton() {
 	registerQuestButtons();
 }
 showDailyQuestButton();
-
-// USER profile functions
-function showUserSteamProfileLink() {
-	if (profileData.profile.steamId) {
-		$(`<a href="//steamcommunity.com/profiles/${profileData.profile.steamId}" target="_blank" data-steam-enabled="true" data-is-current-user="false" class="hexagon btn-social btn-steamfriend" data-toggle="tooltip" data-placement="top" title="" data-original-title="Open user\'s Steam profile in new tab"><i class="fab fa-steam" aria-hidden="true"></i></a>`)
-			.appendTo('section.um-profile__friends');
-	}
-}
-
-// GIVEAWAY functions
-function showAvailableKeys() {
-	//output prependTo('.content-container');
-	//div#get-key-actions span.key-count
-	if (typeof countryKeys !== 'undefined') {
-		let keysLeft = 0;
-		let keysOutput = '';
-		let userCountryKeys = countryKeys[user_country];
-		if (typeof userCountryKeys === 'number') {
-			keysLeft = userCountryKeys;
-		} else if (typeof userCountryKeys === 'object') {
-			for (let level in userCountryKeys['normal']) {
-				if (userCountryKeys['normal'][level] > 0) {
-					keysLeft += userCountryKeys['normal'][level];
-					keysOutput += `<b>${userCountryKeys['normal'][level]}</b> keys for <b>${level}</b>+ level<br>\n`;
-				}
-			}
-			for (let level in userCountryKeys['prestige']) {
-				if (userCountryKeys['prestige'][level] > 0) {
-					keysOutput += `<b>${userCountryKeys['prestige'][level]}</b> keys for <b>master${(userCountryKeys['prestige'].length > 1  ? ` ${level}</b>+ level` : '</b> levels')} <span class="awah-info-btn" data-awah-tooltip="Prestige key pool"><span class="fa fa-fw fa-info-circle"></span></span><br>\n`;
-				}
-			}
-		}
-		$('#giveaway-flash-message').after(`<div class="well well-sm">
-<span class="awah-grey" style="float: right;" data-awah-tooltip="by Alienware Arena Helper Realoded"><span class="fa fa-fw fa-key"></span> Available keys info</span>
-User country: <b>${user_country}</b> <span class="awah-info-btn" data-awah-tooltip="Can affect the keys availability.
-Site determines it automatically, based on your IP."><span class="fa fa-fw fa-info-circle"></span></span><br>
-${(keysOutput ? `${keysOutput}` : `<b>${keysLeft}</b> keys left`)}</div>`);
-	}
-}
-
-function showActivateSteamKeyButton() {
-	function injectActivateSteamKeyButton() {
-		// https://store.steampowered.com/account/registerkey?key=XXXXX-XXXXX-XXXXX
-		// /([A-Z0-9]{5}-[A-Z0-9]{5}-[A-Z0-9]{5})/
-		let message = $('#giveaway-flash-message').html();
-		message = message.replace(/<p>Key: (.*)([\s]{1}<a[\s]{1}.*<\/a>)<\/p>/m, `<p>Key: $1</p>`);
-		$('#giveaway-flash-message').html(message.replace(/<p>Key:[\s]{1}([A-Z0-9]{5}-[A-Z0-9]{5}-[A-Z0-9]{5})<\/p>/m, '<p>Key: $1 <a target="_blank" href="https://store.steampowered.com/account/registerkey?key=$1" class="btn btn-share awah-activate-steam-key-btn" data-awah-tooltip="Activate key on Steam site"><i class="fa fa-steam"></i> Activate</a></p>'));
-	}
-	injectActivateSteamKeyButton();
-	document.addEventListener('animationstart', function(event) {
-		if (event.animationName === 'awah-element-appears-hook') {
-			setTimeout(() => injectActivateSteamKeyButton(), 1);
-		}
-	}, false);
-}
-
-function markTakenGiveaways(giveawayKeysByID) {
-	$('.giveaways__listing .giveaways__listing-post').each(function() {
-		let giveawayID = /\/ucf\/show\/([\d]+)/.exec($(this).data('url-link'));
-		giveawayID = giveawayID[1];
-		if (typeof giveawayKeysByID[giveawayID] === 'object') {
-			$(this).addClass('awah-giveaway-taken');
-			let awahLabel = `✔\nTAKEN AT: ${giveawayKeysByID[giveawayID].assigned_at}`;
-			if (options.showKeyOnMarkedGiveaways) {
-				awahLabel += `\n            KEY: ${giveawayKeysByID[giveawayID].value}`;
-			}
-			$(this).attr('awahlabel', awahLabel);
-		}
-	});
-}
-
-function getTakenGiveaways() {
-	let statusMessage = ui.newStatusMessage('Getting your giveaways info <span class="fa fa-fw fa-circle-o-notch fa-spin"></span>', true);
-	statusMessage.style.display = 'none';
-	let statusMessageFAIcon = statusMessage.querySelector('span');
-	let showStatusMessage = setTimeout(() => {statusMessage.style.display = ''}, 2000);
-
-	// TODO: check for empty array response (returns when logged out)
-	// TODO: remake to fetch()
-	$.getJSON('/giveaways/keys', function(data) {
-		clearTimeout(showStatusMessage);
-		statusMessageFAIcon.className = 'fa fa-fw fa-check-circle';
-		setTimeout(() => {
-			statusMessage.classList.add('awah-casper-out');
-			setTimeout(() => {if (statusMessage) statusMessage.remove()}, 700);
-		}, options.statusMessageDelay);
-
-		let awahGiveawayKeys = {};
-		$.each(data, function(index, value) {
-			awahGiveawayKeys[value.giveaway_id] = value;
-		});
-		console.log('👽 awahGiveawayKeys', awahGiveawayKeys);
-		markTakenGiveaways(awahGiveawayKeys); // sometimes first giveaways page loaded before event registered
-		document.addEventListener('animationstart', function(event) {
-			if (event.animationName === 'awah-element-appears-hook') {
-				markTakenGiveaways(awahGiveawayKeys);
-			}
-		}, false);
-	}).fail(function() {
-		statusMessageFAIcon.className = 'fa fa-fw fa-exclamation-triangle';
-		setTimeout(() => statusMessage.classList.add('awah-casper-out'), options.statusMessageDelay);
-	});
-}
 
 // remove elements that bog down AWA
 // twitch player on home page
@@ -806,9 +700,11 @@ if (options.twitchWatchAutomate) {
 	}
 }
 
-function closeRecentKeyPopup() {
-	let popup = document.querySelector('div.alert-info button.close');
-	if (popup) popup.click();
+if (options.timeOnSiteCheck) {
+	const timeOnSitePoints = document.querySelector('div > div > section:nth-child(7) > div > div:nth-child(2) > center > b');
+	if (timeOnSitePoints >= 5) {
+		ui.newStatusMessage(`"Time On Site" ARP reached, you can close the page`, true);
+	}
 }
 
 let path = window.location.pathname;
