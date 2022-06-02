@@ -640,6 +640,7 @@ function awaHelper() {
 			switch (dailyQuest) {
 				case 'show some id':
 				case 'new bling':
+				case 'new sheriff in town':
 					$(`<a class="btn btn-default awah-btn-quest" href="https://www.alienwarearena.com/account/personalization#badges" data-awah-tooltip="Change badge">
 						<span class="more-link right"></span></a>`).appendTo(".quest-item > .col-2");
 					ui.newStatusMessage(`<a href="https://www.alienwarearena.com/account/personalization#badges">Daily Quest: change badge</a>`, true);
@@ -741,7 +742,7 @@ function awaHelper() {
 
 	if (options.timeOnSiteCheck) {
 		const timeOnSitePoints = document.querySelector('div > div > section:nth-child(7) > div > div:nth-child(2) > center > b');
-		if (timeOnSitePoints.innerText < 50) {
+		if (timeOnSitePoints.innerText < 5) {
 			ui.newStatusMessage(`You still havent't spent enough time to clear the daily rewards, please keep AWA open`);
 		}
 	}
