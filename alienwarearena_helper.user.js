@@ -9,8 +9,6 @@
 // @match        https://www.twitch.tv/*
 // @license      GPL-2.0-or-later; http://www.gnu.org/licenses/gpl-2.0.txt
 // @icon         https://www.alienwarearena.com/favicon.ico
-// @require      file:///C:\Users\User\Documents\GitHub\alienware-arena-helper-reloaded\awahelper.js
-// @require      file:///C:\Users\User\Documents\GitHub\alienware-arena-helper-reloaded\twitch.js
 // @grant        none
 // @noframes
 // ==/UserScript==
@@ -648,6 +646,7 @@ function awaHelper() {
 				case 'town crier':
 				case 'spread the love':
 				case 'sharing is caring!':
+				case 'spread the good word':
 					$(`<a class="btn btn-default awah-btn-quest" href="https://www.alienwarearena.com/ucf/show/2082495/boards/awa-on-topic/ForumPost/rules-on-old-dead-topics" data-awah-tooltip="Click the FB/Twitter share button">
 						<span class="more-link right"></span></a>`).appendTo(".quest-item > .col-2");
 					ui.newStatusMessage(`<a href="https://www.alienwarearena.com/ucf/show/2082495/boards/awa-on-topic/ForumPost/rules-on-old-dead-topics">Daily Quest: share a post</a>`, true);
